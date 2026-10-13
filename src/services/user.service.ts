@@ -7,8 +7,6 @@ const handleCreateUser = async (
   address: string) => {
 
   // insert into database
-
-
   const newUser = await prisma.user.create({
     data: {
       name: fullName,
@@ -20,17 +18,8 @@ const handleCreateUser = async (
 }
 
 const getAllUser = async () => {
-  const connection = await getConection()
-  // A simple SELECT query
-  try {
-    const [results, fields] = await connection.query(
-      'SELECT * FROM `user`'
-    );
-    return results
-  } catch (err) {
-    console.log(err);
-    return []
-  }
+  const users = prisma.user.findMany()
+  return users
 }
 
 const handleDeleteUser = async (id: string) => {
