@@ -1,3 +1,4 @@
+import { prisma } from "config/client"
 import getConection from "config/database"
 
 const handleCreateUser = async (
@@ -6,18 +7,16 @@ const handleCreateUser = async (
   address: string) => {
 
   // insert into database
-  const connection = await getConection()
-  try {
-    const sql = 'INSERT INTO `users`(`name`, `email`,`address`) VALUES (?, ?, ?)';
-    const values = [fullName, email, address];
 
-    const [result, fields] = await connection.execute(sql, values);
-    return result
-  } catch (err) {
-    console.log(err);
-    return []
-  }
 
+  const newUser = await prisma.user.create({
+    data: {
+      name: fullName,
+      email: email,
+      address: address
+    }
+  })
+  return newUser
 }
 
 const getAllUser = async () => {
@@ -25,7 +24,7 @@ const getAllUser = async () => {
   // A simple SELECT query
   try {
     const [results, fields] = await connection.query(
-      'SELECT * FROM `users`'
+      'SELECT * FROM `user`'
     );
     return results
   } catch (err) {
